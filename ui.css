@@ -1,0 +1,383 @@
+/* ==========================================================================
+   UI — minor improvements to Obsidian's default style
+
+   1. Variables
+   2. Workspace (scrollbars, sidebars)
+   3. Title
+   4. Metadata
+   5. Text
+   6. Links
+   7. Headers
+   8. Code & math blocks
+   9. Media (images, PDFs, external media, embeds)
+   10. Settings
+   11. Bases
+   12. Platform specific
+   ========================================================================== */
+
+
+/* ==========================================================================
+   1. VARIABLES
+   ========================================================================== */
+
+body {
+  /* Document */
+  /* --font-weight: 400; */
+  /* font-weight: var(--font-weight); */
+  --file-line-width: 900px !important; /* max(45vw, 900px) */
+  --line-height-normal: 1.5;
+  --font-smaller: 0.85em;
+
+  /* Scrollbars */
+  scrollbar-width: thin;
+
+  /* Title */
+  --inline-title-size: calc(1.12 * var(--h1-size));
+
+  /* Headers */
+  --h2-size: calc(0.88 * var(--h1-size));
+  --h3-size: calc(0.77 * var(--h1-size));
+  --h4-size: calc(0.68 * var(--h1-size));
+  --h5-size: calc(0.60 * var(--h1-size));
+  --h6-size: calc(0.53 * var(--h1-size));
+
+  /* Quotes */
+  --blockquote-border-thickness: 3px;
+  --blockquote-border-color: var(--text-faint);
+  --indentation-guide-width: 1.5px;
+
+  /* Images: dark mode */
+  --image-opacity-muted: 0.6;
+  --image-opacity-focus: 0.9;
+  --image-opacity-transition-in: 1.20s;
+  --image-opacity-transition-out: 0.20s;
+
+  /* Media */
+  --media-max-width: min(80vw, calc(0.90 * var(--file-line-width)));
+
+  /* Links and bold */
+  --bold-weight: 700;
+  --internal-link-weight: 800;
+  --external-link-modifier: 50;
+  --link-decoration: none;
+  /* --link-external-decoration: none; */
+
+  /* Radii */
+  --radius-l: 21px;
+  --radius-m: 14px;
+  --radius-s: 7px;
+
+  /* Borders */
+  --border-width: 2px;
+  --divider-width: 0px;
+  --modal-border-width: 0px;
+
+  /* Metadata */
+  /* --metadata-border-radius: calc(2 * var(--size-2-2)); */
+  /* --metadata-background: var(--background-secondary); */
+  /* --metadata-padding: var(--metadata-border-radius); */
+
+  /* Status bar */
+  --status-bar-background: var(--background-primary);
+
+  /* Checkboxes (used by tasks.css) */
+  --checkbox-border-color: var(--text-muted);
+
+  /* Sidebar */
+  /* --font-ui-small: calc(var(--font-adaptive-normal) - 3px) !important; */
+  /* --font-ui-medium: calc(var(--font-adaptive-normal) - 2px) !important; */
+  /* --nav-item-size: var(--font-ui-medium); */
+
+  /* Theme backgrounds */
+  --background-primary-alt: hsl(from var(--background-primary) h calc(s + 12) l);
+  --background-desaturated: hsl(from var(--background-primary) h calc(s * 0.80) l);
+
+  /* Text colours (derived from the background) */
+  /* font-stretch: 70%; */
+  --text-normal-light: oklch(from var(--background-primary) calc(l * 0.30) calc(c * 0.3) h);
+  --text-normal-dark: oklch(from var(--background-primary) calc(l + (1 - l) * 0.85) calc(c * 0.3) h);
+  --text-normal: light-dark(var(--text-normal-light), var(--text-normal-dark));
+  --text-muted: color-mix(in oklch, var(--text-normal) 50%, var(--background-desaturated) 50%);
+  --text-faint: color-mix(in oklch, var(--text-normal) 25%, var(--background-desaturated) 75%);
+
+  /* Text box fields (search) */
+  --background-modifier-form-field: var(--background-primary);
+}
+
+
+/* ==========================================================================
+   2. WORKSPACE
+   ========================================================================== */
+
+/* Scrollbar colours: sidebars and modals */
+.workspace-split.mod-horizontal.mod-sidedock.mod-left-split,
+.workspace-split.mod-horizontal.mod-sidedock.mod-right-split,
+.modal-container {
+  scrollbar-color: color-mix(in oklab, var(--background-secondary) 92%, black) transparent;
+}
+
+/* Scrollbar colours: main editor area */
+.workspace-split.mod-vertical.mod-root {
+  scrollbar-color: color-mix(in oklab, var(--background-primary) 92%, black) transparent;
+}
+
+/* Hide horizontal overflow in sidebars */
+.workspace-split.mod-left-split .workspace-leaf-content,
+.workspace-split.mod-right-split .workspace-leaf-content,
+.workspace-split.mod-left-split .view-content,
+.workspace-split.mod-right-split .view-content {
+  overflow-x: hidden !important;
+}
+
+
+/* ==========================================================================
+   3. TITLE
+   ========================================================================== */
+
+/* Inline title uses the interface font */
+.inline-title {
+  font-family: var(--font-interface) !important;
+}
+
+/* Remove title condensation */
+.inline-title:not([data-level]) {
+  letter-spacing: 0;
+}
+
+/* Tab header title uses the same colour as the inline title */
+.workspace-leaf.mod-active .view-header-title {
+  color: var(--inline-title-color) !important;
+}
+
+
+/* ==========================================================================
+   4. METADATA
+   ========================================================================== */
+
+/* Margins before and after */
+.metadata-container {
+  margin-top: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+/* Properties as a rounded pill */
+.metadata-content {
+  background: var(--background-secondary) !important;
+  border-radius: var(--radius-m);
+  padding: 12px;
+}
+
+/* Hide the "Properties" heading */
+.metadata-properties-heading {
+  display: none;
+}
+
+/* Vertically align keys and icons */
+.metadata-property-key,
+.metadata-property-icon {
+  display: flex;
+  align-items: center;
+}
+
+/* Uniform line height (unitless instead of 1.5em) */
+.metadata-property-value {
+  line-height: 1.5;
+}
+
+/* Remove the misaligned add button icon */
+.metadata-add-button.text-icon-button > .text-button-icon {
+  display: none;
+}
+
+/* Hide coordinates */
+/* .metadata-property[data-property-key="coordinates"] { display: none; } */
+
+/* Same font on properties */
+/* .metadata-container * { font-family: inherit !important; } */
+
+
+/* ==========================================================================
+   5. TEXT
+   ========================================================================== */
+
+/* Justify plain paragraphs only */
+.cm-line:not([class*="HyperMD"]) {
+  text-align: justify;
+}
+
+/* Bold weight */
+strong, b, .cm-strong {
+  /* font-variation-settings: "wght" var(--bold-weight); -- use actual axis value */
+  font-weight: var(--bold-weight);
+}
+
+/* Bold + italic uses the bold colour */
+.cm-em.cm-strong {
+  color: var(--bold-color);
+}
+
+/* Padding after paragraphs */
+/* .markdown-source-view.mod-cm6 [class="cm-line"], */
+/* .markdown-source-view.mod-cm6 [class="cm-active cm-line"] { padding-bottom: 0.15em; } */
+
+
+/* ==========================================================================
+   6. LINKS
+   ========================================================================== */
+
+/* Internal link weight */
+.cm-hmd-internal-link > .cm-underline {
+  /* font-variation-settings: "wght" var(--internal-link-weight); */
+  font-weight: var(--internal-link-weight);
+}
+
+/* Normal weight on external links */
+/* span.cm-string.cm-url,
+   .cm-url > .cm-underline,
+   .cm-link > .cm-underline {
+     font-weight: calc(var(--font-normal) + var(--external-link-modifier));
+   } */
+
+/* Hide the external link symbol */
+/* span.cm-formatting.cm-formatting-link-string.cm-string.cm-url.external-link {
+     display: none !important;
+   } */
+
+
+/* ==========================================================================
+   7. HEADERS
+   ========================================================================== */
+
+/* Tighter header spacing */
+.HyperMD-header-1,
+.HyperMD-header-2,
+.HyperMD-header-3,
+.HyperMD-header-4,
+.HyperMD-header-5,
+.HyperMD-header-6 {
+  padding-top: 0em !important;
+  padding-bottom: 0.33em !important;
+}
+
+
+/* ==========================================================================
+   8. CODE & MATH BLOCKS
+   ========================================================================== */
+
+/* Compact code block fences */
+.HyperMD-codeblock.HyperMD-codeblock-begin:has([aria-hidden="true"]),
+.HyperMD-codeblock.HyperMD-codeblock-end:has([aria-hidden="true"]) {
+  line-height: calc(3/8 * var(--line-height-normal));
+}
+
+/* Margin before and after code blocks -- disabled, was breaking vim */
+/* .HyperMD-codeblock.HyperMD-codeblock-begin.HyperMD-codeblock-bg.cm-line { margin-top: 0.5em !important; } */
+/* .HyperMD-codeblock.HyperMD-codeblock-end.HyperMD-codeblock-bg.cm-line { margin-bottom: 0.5em !important; } */
+
+/* Larger math blocks */
+.math.math-block.cm-embed-block {
+  font-size: 1.1em;
+}
+
+
+/* ==========================================================================
+   9. MEDIA
+   ========================================================================== */
+
+/* --- Images ---------------------------------------------------------------
+   TODO: add support for faded opacity on videos and external images */
+
+/* Centre images */
+.internal-embed.media-embed.image-embed.is-loaded {
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+/* Image size and rounded corners */
+.image-wrapper > img,
+.internal-embed.media-embed.image-embed.is-loaded > img,
+.internal-embed.media-embed.image-embed.is-loaded > .image-wrapper > img {
+  max-width: var(--media-max-width);
+  border-radius: var(--radius-m);
+  /* max-height: 45vh; */
+  /* height: auto !important; */
+  /* width: auto !important; */
+}
+
+/* Dim images in dark mode, fade in on hover
+   TODO: changes in api - check again later */
+.theme-dark .image-wrapper img {
+  opacity: var(--image-opacity-muted);
+  transition: opacity var(--image-opacity-transition-out);
+}
+
+.theme-dark .image-wrapper:hover img {
+  opacity: var(--image-opacity-focus);
+  transition: opacity var(--image-opacity-transition-in) ease-in;
+}
+
+/* --- PDF ----------------------------------------------------------------- */
+
+/* Max size */
+.internal-embed.pdf-embed.is-loaded {
+  max-height: 60vh;
+  max-width: var(--media-max-width);
+}
+
+/* --- External media (YouTube) --------------------------------------------- */
+
+/* Centred 16:9 player */
+.markdown-source-view.mod-cm6 .cm-content > iframe.external-embed.mod-receives-events {
+  display: block;
+  border-radius: var(--radius-l);
+  margin: 0 auto !important;
+  width: 90%;
+  aspect-ratio: 16/9;
+  height: auto;
+  max-width: var(--media-max-width);
+}
+
+/* --- Internal embeds ------------------------------------------------------ */
+
+/* Hide the first heading of an embedded note */
+.internal-embed.markdown-embed.inline-embed
+  .markdown-preview-sizer
+  > .mod-header.mod-ui
+  + :is(.el-h1, .el-h2, .el-h3, .el-h4, .el-h5, .el-h6) {
+  display: none !important;
+}
+
+/* Hide embed titles */
+/* .embed-title.markdown-embed-title { display: none; } */
+
+
+/* ==========================================================================
+   10. SETTINGS
+   ========================================================================== */
+
+.setting-item-control > .dropdown,
+.setting-item-control > button:not(.mod-cta) {
+  background: var(--background-primary);
+}
+
+
+/* ==========================================================================
+   11. BASES
+   ========================================================================== */
+
+.bases-table-container,
+.bases-table {
+  background: var(--background-secondary);
+}
+
+
+/* ==========================================================================
+   12. PLATFORM SPECIFIC
+   TODO: change to screen size dependent
+   ========================================================================== */
+
+/* Linux font size */
+/* body.mod-linux { --font-adaptive-normal: 17px !important; } */
